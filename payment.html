@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS Cheats - UPI Payment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: linear-gradient(135deg, #0c0f17 0%, #1a1f2e 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: white; padding: 20px; }
+        .container { background: rgba(25, 30, 45, 0.95); border-radius: 15px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); padding: 30px; width: 100%; max-width: 420px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { font-size: 26px; background: linear-gradient(90deg, #ff6b00, #ff0080); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: bold; margin-bottom: 8px; }
+        .header p { color: #8892b0; font-size: 14px; }
+        .order-info { background: rgba(15, 20, 30, 0.8); border-radius: 10px; padding: 20px; margin-bottom: 25px; text-align: center; border-left: 4px solid #ff6b00; }
+        .order-details { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .order-details:last-child { margin-bottom: 0; font-weight: bold; color: #ff6b00; font-size: 18px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .qr-section { background: white; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+        .qr-header { color: #333; margin-bottom: 15px; font-size: 16px; font-weight: bold; }
+        .qr-amount { color: #ff6b00; font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+        .qr-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .qr-code { width: 200px; height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f8f8f8; }
+        .qr-code img { width: 100%; height: 100%; object-fit: contain; }
+        .dynamic-qr { display: none; }
+        .dynamic-qr.active { display: block; }
+        .upi-id { background: rgba(15, 20, 30, 0.8); border-radius: 8px; padding: 15px; margin: 15px 0; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .upi-id h3 { color: #ff6b00; margin-bottom: 8px; font-size: 14px; }
+        .upi-address { font-family: monospace; background: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 5px; font-size: 16px; letter-spacing: 1px; margin-bottom: 8px; }
+        .instructions { background: rgba(255, 107, 0, 0.1); border-radius: 8px; padding: 15px; margin: 20px 0; border-left: 4px solid #ff6b00; }
+        .instructions h3 { color: #ff6b00; margin-bottom: 10px; font-size: 14px; }
+        .instructions ol { padding-left: 20px; font-size: 12px; color: #ccd6f6; }
+        .instructions li { margin-bottom: 8px; }
+        .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .confirm-btn { flex: 1; padding: 12px; background: linear-gradient(90deg, #00c853, #009624); border: none; border-radius: 8px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: transform 0.3s; }
+        .confirm-btn:hover { transform: translateY(-2px); }
+        .cancel-btn { flex: 1; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .cancel-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .payment-status { display: none; text-align: center; margin: 15px 0; padding: 15px; border-radius: 8px; background: rgba(0, 200, 83, 0.1); border: 1px solid #00c853; }
+        .status-icon { font-size: 40px; margin-bottom: 10px; }
+        .copy-btn { margin-top: 8px; padding: 6px 12px; background: #ff6b00; border: none; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; transition: background 0.3s; }
+        .copy-btn:hover { background: #ff0080; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UPI PAYMENT</h1>
+            <p>Scan QR code to complete payment</p>
+        </div>
+        <div class="order-info">
+            <div class="order-details">
+                <span>Product:</span>
+                <span id="productName">Gaming Cheat Key</span>
+            </div>
+            <div class="order-details">
+                <span>Duration:</span>
+                <span id="duration">0 Days</span>
+            </div>
+            <div class="order-details">
+                <span>Amount:</span>
+                <span id="amount">₹0</span>
+            </div>
+        </div>
+        <div class="qr-section">
+            <div class="qr-header">Scan this QR Code to Pay</div>
+            <div class="qr-amount" id="qrAmount">Amount: ₹0</div>
+            <div class="qr-container">
+                <div class="dynamic-qr" id="qr12days">
+                    <div class="qr-code">
+                        <img src="qr-12days.jpg" alt="UPI QR Code for ₹350">
+                    </div>
+                    <div style="color: #333; font-size: 14px; margin-top: 10px;">Amount: ₹350 (12 Days)</div>
+                </div>
+                <div class="dynamic-qr" id="qr20days">
+                    <div class="qr-code">
+                        <img src="qr-20days.jpg" alt="UPI QR Code for ₹500">
+                    </div>
+                    <div style="color: #333; font-size: 14px; margin-top: 10px;">Amount: ₹500 (20 Days)</div>
+                </div>
+                <div class="dynamic-qr" id="qr30days">
+                    <div class="qr-code">
+                        <img src="qr-30days.jpg" alt="UPI QR Code for ₹749">
+                    </div>
+                    <div style="color: #333; font-size: 14px; margin-top: 10px;">Amount: ₹749 (30 Days)</div>
+                </div>
+            </div>
+        </div>
+        <div class="upi-id">
+            <h3>OR Send Payment to UPI ID:</h3>
+            <div class="upi-address" id="upiAddress">your-upi@paytm</div>
+            <button class="copy-btn" onclick="copyUPI()">Copy UPI ID</button>
+        </div>
+        <div class="instructions">
+            <h3>Payment Instructions:</h3>
+            <ol>
+                <li>Scan the QR code with any UPI app</li>
+                <li>Amount will be automatically filled</li>
+                <li>Complete payment and click 'I have Paid'</li>
+                <li>Your key will be generated automatically</li>
+            </ol>
+        </div>
+        <div class="payment-status" id="paymentStatus">
+            <div class="status-icon">✅</div>
+            <h3>Payment Verified Successfully!</h3>
+            <p>Your key will be generated shortly...</p>
+        </div>
+        <div class="action-buttons">
+            <button class="confirm-btn" onclick="verifyPayment()">I HAVE PAID</button>
+            <button class="cancel-btn" onclick="goBack()">CANCEL</button>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            const days = localStorage.getItem('selectedDays') || '0';
+            const amount = localStorage.getItem('selectedAmount') || '0';
+            document.getElementById('duration').textContent = days + ' Days';
+            document.getElementById('amount').textContent = '₹' + amount;
+            document.getElementById('qrAmount').textContent = 'Amount: ₹' + amount;
+            document.getElementById('productName').textContent = days + ' Days Gaming Cheat Key';
+            showCorrectQRCode(days);
+        }
+        function showCorrectQRCode(days) {
+            document.querySelectorAll('.dynamic-qr').forEach(qr => {
+                qr.classList.remove('active');
+            });
+            if (days == 12) {
+                document.getElementById('qr12days').classList.add('active');
+            } else if (days == 20) {
+                document.getElementById('qr20days').classList.add('active');
+            } else if (days == 30) {
+                document.getElementById('qr30days').classList.add('active');
+            }
+        }
+        function copyUPI() {
+            const upiAddress = document.getElementById('upiAddress').textContent;
+            navigator.clipboard.writeText(upiAddress).then(function() {
+                alert('UPI ID copied: ' + upiAddress);
+            });
+        }
+        function verifyPayment() {
+            const paymentStatus = document.getElementById('paymentStatus');
+            const confirmBtn = document.querySelector('.confirm-btn');
+            confirmBtn.textContent = 'Verifying...';
+            confirmBtn.disabled = true;
+            setTimeout(() => {
+                paymentStatus.style.display = 'block';
+                confirmBtn.style.display = 'none';
+                setTimeout(() => {
+                    generateAndShowKey();
+                }, 2000);
+            }, 3000);
+        }
+        function generateAndShowKey() {
+            const days = localStorage.getItem('selectedDays');
+            const key = 'SS-' + Math.random().toString(36).substr(2, 9).toUpperCase() + '-' + days + 'D';
+            const paymentStatus = document.getElementById('paymentStatus');
+            paymentStatus.innerHTML = `
+                <div class="status-icon">🎮</div>
+                <h3>Payment Successful!</h3>
+                <p><strong>Your ${days} Days Key:</strong></p>
+                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 5px; margin: 10px 0; font-family: monospace; font-size: 16px; letter-spacing: 1px;">${key}</div>
+                <p style="font-size: 12px; color: #ccd6f6;">Copy this key and use it in the cheat loader</p>
+                <button onclick="goToLogin()" style="margin-top: 10px; padding: 8px 15px; background: #ff6b00; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 14px;">Back to Login</button>
+            `;
+        }
+        function goBack() {
+            window.location.href = 'key.html';
+        }
+        function goToLogin() {
+            localStorage.removeItem('selectedDays');
+            localStorage.removeItem('selectedAmount');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

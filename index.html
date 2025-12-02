@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS Cheats - Select Key</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: linear-gradient(135deg, #0c0f17 0%, #1a1f2e 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: white; padding: 20px; }
+        .container { background: rgba(25, 30, 45, 0.95); border-radius: 15px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); padding: 30px; width: 100%; max-width: 450px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { font-size: 28px; background: linear-gradient(90deg, #ff6b00, #ff0080); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: bold; margin-bottom: 8px; }
+        .header p { color: #8892b0; font-size: 14px; }
+        .user-info { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(15, 20, 30, 0.8); border-radius: 8px; border-left: 4px solid #ff6b00; }
+        .user-info p { color: #ccd6f6; font-size: 14px; }
+        .key-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .key-option { background: rgba(15, 20, 30, 0.8); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 18px; cursor: pointer; transition: all 0.3s; display: flex; justify-content: space-between; align-items: center; }
+        .key-option:hover { border-color: #ff0080; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 128, 0.2); }
+        .key-option.selected { border-color: #ff6b00; background: rgba(255, 107, 0, 0.15); }
+        .key-duration { font-size: 18px; font-weight: bold; color: #ccd6f6; }
+        .key-price { font-size: 17px; color: #ff6b00; font-weight: bold; }
+        .purchase-btn { width: 100%; padding: 14px; background: linear-gradient(90deg, #ff6b00, #ff0080); border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
+        .purchase-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 128, 0.4); }
+        .purchase-btn:disabled { background: #8892b0; cursor: not-allowed; transform: none; box-shadow: none; }
+        .back-link { text-align: center; margin-top: 20px; }
+        .back-link a { color: #ff0080; text-decoration: none; font-size: 14px; font-weight: 500; }
+        .back-link a:hover { text-decoration: underline; }
+        .discount-badge { background: #ff0080; color: white; padding: 3px 10px; border-radius: 12px; font-size: 11px; margin-left: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SS CHEATS KEY</h1>
+            <p>Select your preferred key duration</p>
+        </div>
+        <div class="user-info">
+            <p>Welcome, <strong id="userName">User</strong> | Ready to purchase</p>
+        </div>
+        <div class="key-options">
+            <div class="key-option" onclick="selectKey(12)">
+                <div class="key-duration">12 DAYS</div>
+                <div class="key-price">₹350</div>
+            </div>
+            <div class="key-option" onclick="selectKey(20)">
+                <div class="key-duration">20 DAYS <span class="discount-badge">POPULAR</span></div>
+                <div class="key-price">₹500</div>
+            </div>
+            <div class="key-option" onclick="selectKey(30)">
+                <div class="key-duration">30 DAYS <span class="discount-badge">BEST VALUE</span></div>
+                <div class="key-price">₹749</div>
+            </div>
+        </div>
+        <button class="purchase-btn" id="purchaseBtn" disabled onclick="proceedToPayment()">SELECT A KEY DURATION</button>
+        <div class="back-link">
+            <a href="login.html">← Back to Login</a>
+        </div>
+    </div>
+    <script>
+        let selectedKey = null;
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser') || 'User';
+            document.getElementById('userName').textContent = user;
+        }
+        function selectKey(days) {
+            document.querySelectorAll('.key-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            selectedKey = days;
+            const purchaseBtn = document.getElementById('purchaseBtn');
+            purchaseBtn.disabled = false;
+            purchaseBtn.textContent = `PURCHASE ${days} DAYS KEY - ₹${getPrice(days)}`;
+        }
+        function getPrice(days) {
+            const prices = {12: '350', 20: '500', 30: '749'};
+            return prices[days];
+        }
+        function proceedToPayment() {
+            if (!selectedKey) return;
+            localStorage.setItem('selectedDays', selectedKey);
+            localStorage.setItem('selectedAmount', getPrice(selectedKey));
+            window.location.href = 'payment.html';
+        }
+    </script>
+</body>
+</html>
